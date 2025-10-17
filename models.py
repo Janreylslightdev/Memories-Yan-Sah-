@@ -9,6 +9,13 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(150), nullable=False)
     albums = db.relationship('Album', backref='user', lazy=True)
 
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(150), nullable=False)
+    original_filename = db.Column(db.String(150), nullable=False)
+    upload_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    album_id = db.Column(db.Integer, db.ForeignKey('album.id'), nullable=False)
+
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
@@ -16,10 +23,3 @@ class Album(db.Model):
     cover_image_id = db.Column(db.Integer, db.ForeignKey('image.id'), nullable=True)
     images = db.relationship('Image', backref='album', lazy=True, foreign_keys='Image.album_id')
     cover_image = db.relationship('Image', foreign_keys=[cover_image_id], uselist=False)
-
-class Image(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(150), nullable=False)
-    original_filename = db.Column(db.String(150), nullable=False)
-    upload_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    album_id = db.Column(db.Integer, db.ForeignKey('album.id'), nullable=False)

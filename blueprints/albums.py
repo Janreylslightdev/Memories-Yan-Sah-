@@ -73,6 +73,10 @@ def delete_album(album_id):
         flash('Access denied.')
         return redirect(url_for('albums.list_albums'))
 
+    # Set cover_image_id to None to avoid foreign key issues
+    album.cover_image_id = None
+    db.session.commit()
+
     # Delete all associated image files
     from flask import current_app
     for image in album.images:
@@ -80,7 +84,11 @@ def delete_album(album_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-    # Delete the album (this will cascade delete images due to foreign key)
+    # Delete images from database first
+    for image in album.images:
+        db.session.delete(image)
+
+    # Delete the album
     db.session.delete(album)
     db.session.commit()
     flash('Album deleted successfully!')

@@ -29,11 +29,11 @@
                 <h3>{{ album.name }}</h3>
                 <p>{{ album.images|length }} images</p>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <a href="{{ url_for('albums.view_album', album_id=album.id) }}" class="btn" style="flex: 1; text-align: center;">👁️ View Album</a>
+                    <a href="{{ url_for('albums.view_album', album_id=album.id) }}" class="btn" style="flex: 1; text-align: center; min-width: 80px;">👁️ View Album</a>
                     {% if album.images %}
-                        <a href="{{ url_for('albums.set_cover', album_id=album.id) }}" class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); flex: 1; text-align: center;">⭐ Set Cover</a>
+                        <a href="{{ url_for('albums.set_cover', album_id=album.id) }}" class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); flex: 1; text-align: center; min-width: 80px;">⭐ Set Cover</a>
                     {% endif %}
-                    <form method="POST" action="{{ url_for('albums.delete_album', album_id=album.id) }}" style="display: inline; flex: 1;" onsubmit="return confirm('Are you sure you want to delete this album and all its images? This action cannot be undone.');">
+                    <form method="POST" action="{{ url_for('albums.delete_album', album_id=album.id) }}" style="display: inline; flex: 1; min-width: 80px;" onsubmit="return confirm('Are you sure you want to delete this album and all its images? This action cannot be undone.');">
                         <button type="submit" class="btn" style="background: linear-gradient(135deg, #dc2626, #b91c1c); width: 100%;">🗑️ Delete Album</button>
                     </form>
                 </div>
