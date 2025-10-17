@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>⚙️ Account Settings</h2>
+
+    <div class="settings-section">
+        <h3>Change Username</h3>
+        <form method="POST" action="{{ url_for('auth.settings') }}" id="username-form">
+            <input type="hidden" name="action" value="change_username">
+            <div class="form-group">
+                <label for="new_username">👤 New Username:</label>
+                <input type="text" id="new_username" name="new_username" value="{{ current_user.username }}" required>
+            </div>
+            <button type="submit" id="username-btn" class="btn btn-primary">Update Username</button>
+        </form>
+    </div>
+
+    <div class="settings-section">
+        <h3>Change Password</h3>
+        <form method="POST" action="{{ url_for('auth.settings') }}" id="password-form">
+            <input type="hidden" name="action" value="change_password">
+            <div class="form-group">
+                <label for="current_password">🔒 Current Password:</label>
+                <input type="password" id="current_password" name="current_password" required>
+            </div>
+            <div class="form-group">
+                <label for="new_password">🔒 New Password:</label>
+                <input type="password" id="new_password" name="new_password" required>
+            </div>
+            <button type="submit" id="password-btn" class="btn btn-primary">Update Password</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const usernameForm = document.getElementById('username-form');
+    const usernameBtn = document.getElementById('username-btn');
+    const passwordForm = document.getElementById('password-form');
+    const passwordBtn = document.getElementById('password-btn');
+
+    usernameForm.addEventListener('submit', function(e) {
+        usernameBtn.innerHTML = '⏳ Updating...';
+        usernameBtn.disabled = true;
+    });
+
+    passwordForm.addEventListener('submit', function(e) {
+        passwordBtn.innerHTML = '⏳ Updating...';
+        passwordBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

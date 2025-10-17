@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Images{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Upload Images to {{ album.name }}</h2>
+    <form method="POST" enctype="multipart/form-data" id="upload-form">
+        <div class="upload-area" id="upload-area">
+            <div>
+                <h3>📤 Drop images here or click to browse</h3>
+                <p>Supports multiple files • Max 16MB per file</p>
+                <input type="file" id="files" name="files" multiple accept="image/*" required style="display: none;">
+                <button type="button" onclick="document.getElementById('files').click()" class="btn btn-secondary">Choose Files</button>
+            </div>
+        </div>
+        <div id="file-list" style="margin-top: 1rem;"></div>
+        <button type="submit" id="upload-btn" style="margin-top: 1rem;">Upload Images</button>
+    </form>
+    <a href="{{ url_for('albums.view_album', album_id=album.id) }}" class="btn" style="margin-top: 1rem;">Back to Album</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('files');
+    const fileList = document.getElementById('file-list');
+    const uploadBtn = document.getElementById('upload-btn');
+    let selectedFiles = [];
+
+    // Drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        uploadArea.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        uploadArea.classList.remove('dragover');
+    }
+
+    uploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        selectedFiles = Array.from(files);
+        updateFileList();
+        uploadBtn.disabled = selectedFiles.length === 0;
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        if (selectedFiles.length > 0) {
+            const list = document.createElement('div');
+            list.innerHTML = `<h4>Selected Files (${selectedFiles.length}):</h4>`;
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.textContent = `${index + 1}. ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                item.style.margin = '0.25rem 0';
+                list.appendChild(item);
+            });
+            fileList.appendChild(list);
+        }
+    }
+
+    // Form submission
+    document.getElementById('upload-form').addEventListener('submit', function(e) {
+        uploadBtn.innerHTML = '⏳ Uploading...';
+        uploadBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

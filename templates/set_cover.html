@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Set Album Cover - {{ album.name }}{% endblock %}
+
+{% block content %}
+<div class="album-container">
+    <h2>⭐ Set Album Cover</h2>
+    <h3>📸 {{ album.name }}</h3>
+    <p>Choose an image to use as the cover photo for this album:</p>
+
+    <div class="images-grid">
+        {% for image in album.images %}
+            <div class="image-card">
+                <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.original_filename }}">
+                <div class="image-info">
+                    <p class="image-date">📅 {{ image.upload_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    <p class="image-filename" title="{{ image.original_filename }}">📄 {{ image.original_filename }}</p>
+                    <div class="image-actions">
+                        <form method="POST" action="{{ url_for('albums.update_cover', album_id=album.id, image_id=image.id) }}" style="display:inline;">
+                            <button type="submit" class="btn" style="background: linear-gradient(135deg, #10b981, #059669);">✅ Set as Cover</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('albums.list_albums') }}" class="btn" style="margin-right: 1rem;">⬅️ Back to Albums</a>
+        <a href="{{ url_for('albums.view_album', album_id=album.id) }}" class="btn">👁️ View Album</a>
+    </div>
+</div>
+{% endblock %}

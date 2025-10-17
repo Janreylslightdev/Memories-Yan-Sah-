@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Create Album{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Create New Album</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Album Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <button type="submit">Create Album</button>
+    </form>
+    <a href="{{ url_for('albums.list_albums') }}">Back to Albums</a>
+</div>
+{% endblock %}
